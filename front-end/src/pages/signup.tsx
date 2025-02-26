@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { signup, } from "../firebase/auth";
+import { signup } from "../firebase/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import "../app/globals.css";
@@ -22,15 +22,6 @@ const Signup = () => {
       setError(err.message);
     }
   };
-
-  // const handleGoogleSignup = async () => {
-  //   try {
-  //     await googleSignup();
-  //     router.push("/dashboard");
-  //   } catch (err: any) {
-  //     setError(err.message);
-  //   }
-  // };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -54,6 +45,7 @@ const Signup = () => {
             className="mt-1 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Email Address</label>
           <input
@@ -64,6 +56,7 @@ const Signup = () => {
             className="mt-1 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Password</label>
           <input
@@ -74,6 +67,7 @@ const Signup = () => {
             className="mt-1 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Phone Number</label>
           <input
@@ -84,6 +78,7 @@ const Signup = () => {
             className="mt-1 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Address</label>
           <input
@@ -102,24 +97,6 @@ const Signup = () => {
         >
           Sign Up
         </button>
-
-        {/* OR Divider */}
-        {/* <div className="flex items-center my-4">
-          <hr className="flex-grow border-gray-300" />
-          <span className="mx-2 text-gray-500 text-sm">Or continue with</span>
-          <hr className="flex-grow border-gray-300" />
-        </div> */}
-
-        {/* Social Signup Buttons */}
-        {/* <div className="flex gap-4">
-          <button
-            onClick={handleGoogleSignup}
-            className="flex items-center justify-center w-1/2 border py-2 rounded-md hover:bg-gray-100"
-          >
-            <Image src="/google-icon.svg" alt="Google" width={20} height={20} className="mr-2" />
-            Google
-          </button>
-        </div> */}
 
         {/* Error Message */}
         {error && <p className="text-red-500 text-sm text-center mt-4">{error}</p>}
