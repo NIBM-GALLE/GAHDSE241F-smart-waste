@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { login } from "../firebase/auth";
+import { getUserRole, login } from "../firebase/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import "../app/globals.css";
@@ -12,12 +12,10 @@ const Login = () => {
   const router = useRouter();
 
   const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault(); // Prevent page reload
-
+    event.preventDefault();
     try {
-      const { role } = await login(email, password);
-
-      // Redirect based on role
+      const { user } = await login(email, password);
+      const role = await getUserRole(user.uid); // Fetch role from Firestore
       if (role === "admin") {
         router.push("/admin/dashboard");
       } else {
@@ -27,6 +25,7 @@ const Login = () => {
       setError(err.message);
     }
   };
+  
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">

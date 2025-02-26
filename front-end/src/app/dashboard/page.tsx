@@ -21,9 +21,9 @@ const UserDashboard = () => {
         router.push("/admin/dashboard");
       }
     };
-
     checkUserRole();
-  }, []);
+  }, [auth.currentUser?.uid, router]);
+  
 
   if (!role) return <p>Loading...</p>;
 
