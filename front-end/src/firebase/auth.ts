@@ -1,71 +1,67 @@
 import { auth } from "./firebaseConfig";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  updateProfile 
+} from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+
 const db = getFirestore();
 
-// Signup function
 interface SignupParams {
   name: string;
   email: string;
   password: string;
   address: string;
   phone: string;
+  role?: string; // Role added
 }
 
+// Fetch user role
 export const getUserRole = async (uid: string) => {
   const userDoc = await getDoc(doc(db, "users", uid));
   return userDoc.exists() ? userDoc.data()?.role : "user";
 };
 
-export const signup = async ({ name, email, password, address, phone }: SignupParams) => {
+// Signup function with role
+export const signup = async ({ name, email, password, address, phone, role = "user" }: SignupParams) => {
+  try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-  
-    await updateProfile(user, { displayName: name });
-  
-    setDoc(doc(db, "users", user.uid), {
-        name,
-        email,
-        address,
-        phone,
-    });
-  };
-  
-  // export const googleSignup = async () => {
-  //   const provider = new GoogleAuthProvider();
-  //   const result = await signInWithPopup(auth, provider);
-  //   const user = result.user;
-  
-  //   await setDoc(doc(db, "users", user.uid), {
-  //     name: user.displayName,
-  //     email: user.email,
-  //     address: "",
-  //     phone: "",
-  //   });
-  // };
 
-// Login function
+    await updateProfile(user, { displayName: name });
+
+    await setDoc(doc(db, "users", user.uid), {
+      name,
+      email,
+      address,
+      phone,
+      role, // Store role in Firestore
+    });
+
+    return user;
+  } catch (error) {
+    console.error("Signup Error:", error);
+    throw error;
+  }
+};
+
+// Login function with role retrieval
 export const login = async (email: string, password: string) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    const user = userCredential.user;
+
+    // Fetch user role from Firestore
+    const role = await getUserRole(user.uid);
+
+    return { user, role };
   } catch (error) {
     console.error("Login Error:", error);
     throw error;
   }
 };
-
-// Google Login
-// export const googleLogin = async () => {
-//   try {
-//     const provider = new GoogleAuthProvider();
-//     const result = await signInWithPopup(auth, provider);
-//     return result.user;
-//   } catch (error) {
-//     console.error("Google Login Error:", error);
-//     throw error;
-//   }
-// };
 
 // Logout function
 export const logout = async () => {
@@ -78,5 +74,3 @@ export const logout = async () => {
 };
 
 export { auth };
-// Function not implemented error removed
-
