@@ -4,6 +4,7 @@ import { signup } from "../firebase/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import "../app/globals.css";
+import { User } from "firebase/auth";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -16,7 +17,8 @@ const Signup = () => {
 
   const handleSignup = async () => {
     try {
-      await signup({ name, email, password, address, phone });
+      const userId = await signup({ name, email, password, address, phone });
+      await saveUserRole(userId, "user"); // Ensure the role is stored
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message);
@@ -106,3 +108,7 @@ const Signup = () => {
 };
 
 export default Signup;
+function saveUserRole(userId: User, arg1: string) {
+  throw new Error("Function not implemented.");
+}
+

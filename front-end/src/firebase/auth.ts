@@ -6,6 +6,7 @@ import {
   updateProfile 
 } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { setCookie } from "cookies-next"; // Install using: npm install cookies-next
 
 const db = getFirestore();
 
@@ -55,6 +56,10 @@ export const login = async (email: string, password: string) => {
 
     // Fetch user role from Firestore
     const role = await getUserRole(user.uid);
+
+    // Store token and user ID in cookies
+    setCookie("authToken", await user.getIdToken(), { maxAge: 3600 });
+    setCookie("userId", user.uid, { maxAge: 3600 });
 
     return { user, role };
   } catch (error) {
